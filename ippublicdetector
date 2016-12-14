@@ -1,0 +1,20 @@
+{
+	local iplawas [file get mypublicip.txt contents ]
+	put $iplawas
+	/tool fetch url="http://myip.dnsomatic.com/" mode=http dst-path=mypublicip.txt
+	local ipbaru [/file get mypublicip.txt contents ]
+	put $ipbaru
+	if ($iplawas = $ipbaru) do={
+		log warning "IP Public tetap $ipbaru";
+	}
+	if ($iplawas != $ipbaru) do={
+		local sub1 ([/system identity get name])
+		local sub2 ([/system clock get time])
+		local sub3 ([/system clock get date])
+		local filenya mypublicip.txt
+		local warnet "namawarnet"
+		local adminmail emailmimin@gmail.com
+		log warning "IP Public berubah dari $iplawas menjadi $ipbaru, kirimkan email ke $adminmail";
+		/tool e-mail send to=$adminmail subject="$warnet $sub3 $sub2 IP Publik berubah" body="IP $warnet baru = $ipbaru" file=$filenya tls=yes;
+	}
+}
